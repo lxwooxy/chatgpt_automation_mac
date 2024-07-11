@@ -1,0 +1,12 @@
+# Ignore Python bytecode files
+*.pyc
+__pycache__/
+
+# Ignore environment variables
+.env
+
+# Ignore log files
+*.log
+
+# Ignore conversation logs
+conversations/*
