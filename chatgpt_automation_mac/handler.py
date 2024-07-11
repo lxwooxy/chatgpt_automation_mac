@@ -23,6 +23,8 @@ class ChatGPTAutomation:
 
     def send_prompt_to_chatgpt(self, prompt: str):
         try:
+            #remove any aprostrophes from the prompt
+            prompt = prompt.replace("'", "")
             # Locate the input field and send the prompt
             input_box = self.driver.find_element(By.XPATH, '//textarea[contains(@id, "prompt-textarea")]')
             self.driver.execute_script(f"arguments[0].value = '{prompt}';", input_box)
@@ -34,22 +36,6 @@ class ChatGPTAutomation:
         except Exception as e:
             logging.error(f"Error sending prompt: {e}")
 
-    # def check_response_ended(self):
-    #     """Checks if ChatGPT response ended"""
-    #     start_time = time.time()
-    #     while len(self.driver.find_elements(By.CSS_SELECTOR, 'div.text-base')[-1].find_elements(
-    #             By.CSS_SELECTOR, 'button.text-token-text-tertiary')) <= 1:
-
-    #         print("Waiting for response...")
-    #         # Exit the while loop after 10 seconds anyway
-    #         if time.time() - start_time > 5:
-    #             print("Response taking too long, exiting...")
-    #             break
-    #     #print("Response received")
-    #     #delay to ensure the response is fully loaded
-    #     print("Delaying for 1 second")
-    #     time.sleep(1)
-    #     self.last_response = self.return_last_response()
     
     def check_response_ended(self, prompt: str):
         """Checks if ChatGPT response ended"""
@@ -76,8 +62,8 @@ class ChatGPTAutomation:
                     #print("It's still cooking")
                 else:
                     # If the response has not changed for 1 seconds, break the loop
-                    if time.time() - last_check_time > 1:
-                        #print("Response has not changed for 1 seconds, considering it done.")
+                    if time.time() - last_check_time > 2:
+                        #print("Response has not changed for 2 seconds, considering it done.")
                         break
 
             # Exit the loop after 60 seconds to avoid hanging indefinitely
@@ -85,7 +71,7 @@ class ChatGPTAutomation:
                 print("Response taking too long, exiting...")
                 break
 
-            time.sleep(0.5)  # Check every 0.5 seconds
+            time.sleep(1)  # Check every 0.5 seconds
 
         self.last_response = current_text
 
