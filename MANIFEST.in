@@ -1,0 +1,14 @@
+# Exclude __pycache__ directories
+global-exclude __pycache__/*
+global-exclude *.py[cod]
+
+# Include the README, LICENSE, and requirements.txt
+include README.md
+include LICENSE
+include requirements.txt
+
+# Include the chatgpt_automation_mac package
+graft chatgpt_automation_mac
+
+# Exclude conversation logs
+global-exclude conversations/*

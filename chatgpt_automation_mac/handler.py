@@ -21,8 +21,9 @@ class ChatGPTAutomation:
         # Ensure we're on the ChatGPT page
         self.driver.get('https://chat.openai.com/chat')
 
-    def send_prompt_to_chatgpt(self, prompt: str):
+    def send_prompt_to_chatgpt(self, prompt: str, num_files: int = 0):
         try:
+            print(f"num_files: {num_files}")
             #remove any aprostrophes from the prompt
             prompt = prompt.replace("'", "")
             # Locate the input field and send the prompt
@@ -32,6 +33,8 @@ class ChatGPTAutomation:
             input_box.submit()
             #logging.info("Prompt sent to ChatGPT")
             # Wait until the response is done
+            print(f"Waiting for {num_files * 1.5} seconds for response to finish...")
+            time.sleep(num_files * 1.5)
             self.check_response_ended(prompt)
         except Exception as e:
             logging.error(f"Error sending prompt: {e}")
@@ -43,7 +46,7 @@ class ChatGPTAutomation:
         start_time = time.time()
         last_text = ""
         last_check_time = time.time()
-
+    
         while True:
             response_elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.text-base')
             # Filter out empty responses and the prompt itself
@@ -71,10 +74,10 @@ class ChatGPTAutomation:
                 print("Response taking too long, exiting...")
                 break
 
-            time.sleep(1)  # Check every 0.5 seconds
-
+            time.sleep(0.5)  # Check every 0.5 seconds
+        time.sleep(1)
         self.last_response = current_text
-
+        
     
     def return_chatgpt_conversation(self):
         """Returns a list of items, even items are the submitted questions (prompts) and odd items are chatgpt response"""
@@ -90,28 +93,32 @@ class ChatGPTAutomation:
         with open(os.path.join(directory_name, file_name), "a") as file:
             file.write(f"prompt: {prompt}\nresponse: {response}\n\n{delimiter}\n\n")
 
-    def return_last_response(self):
+    def return_last_response(self, prompt: str):
         """Returns the text of the last chatgpt response"""
         response_elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.text-base')
-        
-        
-        # #return the longest response
-        # response_elements = sorted(response_elements, key=lambda x: len(x.text), reverse=True)
-        # answer = response_elements[0].text if response_elements else None
-
-        # #replace all the previous responses with "..."
-        # for response in response_elements:
-        #     response.text = "..."
+        response_elements = [response for response in response_elements if response.text.strip() and response.text.strip() != prompt]
+             
         # answer = response_elements[-1].text if response_elements else None
         # return answer
         return self.last_response
+
     
-    def upload_file(self, file_path: str):
+    def upload_file(self, file_paths: list):
         """Uploads a file to ChatGPT"""
         try:
+            
             file_input = self.driver.find_element(By.XPATH, '//input[@type="file"]')
-            file_input.send_keys(file_path)
-            logging.info("File uploaded successfully.")
+            for file_path in file_paths:
+                # Locate the file input element
+                file_input = self.driver.find_element(By.XPATH, '//input[@type="file"]')
+                
+                # Use JavaScript to clear the value of the file input
+                self.driver.execute_script("arguments[0].value = '';", file_input)
+                
+                # Send the file path to the file input element
+                file_input.send_keys(file_path)
+                logging.info(f"File {file_path} uploaded successfully.")
+                
         except Exception as e:
             logging.error(f"Error uploading file: {e}")
 
