@@ -100,9 +100,9 @@ class ChatGPTAutomation:
         """Returns the text of the last chatgpt response"""
         response_elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.text-base')
         response_elements = [response for response in response_elements if response.text.strip() and response.text.strip() != prompt]
-             
-        # answer = response_elements[-1].text if response_elements else None
-        # return answer
+        if prompt.lower() == 'update':
+            self.last_response = response_elements[-1].text if response_elements else ""
+
         return self.last_response
 
     
