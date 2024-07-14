@@ -23,7 +23,7 @@ class ChatGPTAutomation:
 
     def send_prompt_to_chatgpt(self, prompt: str, num_files: int = 0):
         try:
-            print(f"num_files: {num_files}")
+            #print(f"num_files: {num_files}")
             #remove any aprostrophes from the prompt
             prompt = prompt.replace("'", "")
             # Locate the input field and send the prompt
@@ -33,8 +33,11 @@ class ChatGPTAutomation:
             input_box.submit()
             #logging.info("Prompt sent to ChatGPT")
             # Wait until the response is done
-            print(f"Waiting for {num_files * 1.5} seconds for response to finish...")
+            #print(f"Waiting for {num_files * 1.5} seconds for response to finish...")
             time.sleep(num_files * 1.5)
+            if num_files == 0:
+                time.sleep(5)
+  
             self.check_response_ended(prompt)
         except Exception as e:
             logging.error(f"Error sending prompt: {e}")
