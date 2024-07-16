@@ -2,6 +2,16 @@
 
 ChatGPT Automation is a Python project that aims to automate interactions with OpenAI's ChatGPT using Selenium WebDriver. Currently, it requires human interaction for log-in and human verification. It handles connecting to ChatGPT, sending prompts, and retrieving responses. This tool can be useful for experimenting with ChatGPT or building similar web automation tools.
 
+## What it do
+- Automated messaging to ChatGPT
+- File(s) uploads
+- Storing conversations
+
+
+## What it don't do so well currently
+- Having to the browser with the command below
+- I haven't quite nailed down the delay timings for waiting for a response. For now a prompt of "update" retrieves the latest message without updating the conversation.
+
 ## Prerequisites
 
 ### Download Google Chrome for Testing
