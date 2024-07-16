@@ -23,7 +23,7 @@ class ChatGPTAutomation:
 
     def send_prompt_to_chatgpt(self, prompt: str, num_files: int = 0):
         try:
-            #print(f"num_files: {num_files}")
+            print(f"num_files: {num_files}")
             #remove any aprostrophes from the prompt
             prompt = prompt.replace("'", "")
             # Locate the input field and send the prompt
@@ -33,11 +33,8 @@ class ChatGPTAutomation:
             input_box.submit()
             #logging.info("Prompt sent to ChatGPT")
             # Wait until the response is done
-            #print(f"Waiting for {num_files * 1.5} seconds for response to finish...")
+            print(f"Waiting for {num_files * 1.5} seconds for response to finish...")
             time.sleep(num_files * 1.5)
-            if num_files == 0:
-                time.sleep(5)
-  
             self.check_response_ended(prompt)
         except Exception as e:
             logging.error(f"Error sending prompt: {e}")
@@ -100,9 +97,9 @@ class ChatGPTAutomation:
         """Returns the text of the last chatgpt response"""
         response_elements = self.driver.find_elements(By.CSS_SELECTOR, 'div.text-base')
         response_elements = [response for response in response_elements if response.text.strip() and response.text.strip() != prompt]
-        if prompt.lower() == 'update':
-            self.last_response = response_elements[-1].text if response_elements else ""
-
+             
+        # answer = response_elements[-1].text if response_elements else None
+        # return answer
         return self.last_response
 
     
@@ -130,5 +127,3 @@ class ChatGPTAutomation:
         logging.info("Closing the browser...")
         self.driver.close()
         self.driver.quit()
-
-
