@@ -100,6 +100,10 @@ class ChatGPTAutomation:
              
         # answer = response_elements[-1].text if response_elements else None
         # return answer
+        
+        if prompt.lower() == 'update':
+            self.last_response = response_elements[-1].text if response_elements else ""
+        
         return self.last_response
 
     
